@@ -13,14 +13,13 @@ public class TemplateAction implements IPluginActionDelegate {
 	    try {
 	        AstahAPI api = AstahAPI.getAstahAPI();
 	        ProjectAccessor projectAccessor = api.getProjectAccessor();
+	        ParametricsFrame frame = new ParametricsFrame(projectAccessor.getProject());
 	    } 
 	    catch (Exception e) {
-	    	JOptionPane.showMessageDialog(window.getParent(), "Unexpected error has occurred.", "Alert", JOptionPane.ERROR_MESSAGE); 
+	    	JOptionPane.showMessageDialog(window.getParent(), "Unexpected error has occurred." + e.getMessage(), "Alert", JOptionPane.ERROR_MESSAGE); 
 	        throw new UnExpectedException();
 	    }
 	    
 	    return null;
 	}
-
-
 }

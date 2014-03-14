@@ -1,8 +1,9 @@
 package com.astah.diagram;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.change_vision.jude.api.inf.model.IBlock;
 import com.change_vision.jude.api.inf.model.IBlockDefinitionDiagram;
 import com.change_vision.jude.api.inf.model.IDiagram;
 import com.change_vision.jude.api.inf.model.IModel;
@@ -28,18 +29,30 @@ public class AstahModel {
 	}
 	
 	private static void getParametricDiagramsHelper(IPackage iPackage, List<IParametricDiagram> listOfDiagrams) {
-		
+		for(INamedElement element : iPackage.getOwnedElements()) {
+			if(element instanceof IBlock) {
+				IDiagram[] diagrams = element.getDiagrams();
+				for(IDiagram diagram : diagrams) {
+					if(diagram instanceof IParametricDiagram) {
+						listOfDiagrams.add((IParametricDiagram) diagram);
+					}
+				}
+			}
+			else if(element instanceof IPackage) {
+				getParametricDiagramsHelper((IPackage) element, listOfDiagrams);
+			}
+		}
 	}
 	
 	public static List<IBlockDefinitionDiagram> getBlockDefinitionDiagrams(IModel model) {
-		List<IBlockDefinitionDiagram> diagrams = new LinkedList<IBlockDefinitionDiagram>();
+		List<IBlockDefinitionDiagram> diagrams = new ArrayList<IBlockDefinitionDiagram>();
 		getBlockDefinitionDiagramsHelper(model, diagrams);
 		
 		return diagrams;
 	}
 	
 	public static List<IParametricDiagram> getParametricDiagrams(IModel model) {
-		List<IParametricDiagram> diagrams = new LinkedList<IParametricDiagram>();
+		List<IParametricDiagram> diagrams = new ArrayList<IParametricDiagram>();
 		getParametricDiagramsHelper(model, diagrams);
 		
 		return diagrams;
