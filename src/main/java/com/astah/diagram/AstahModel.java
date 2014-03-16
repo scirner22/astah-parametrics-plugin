@@ -13,7 +13,7 @@ import com.change_vision.jude.api.inf.model.IParametricDiagram;
 
 public class AstahModel {
 	
-	private static void getBlockDefinitionDiagramsHelper(IPackage iPackage, List<IBlockDefinitionDiagram> listOfDiagrams) {
+	private static void getBlockDefinitionDiagramsHelper(IPackage iPackage, List<IDiagram> listOfDiagrams) {
 		for(INamedElement element : iPackage.getOwnedElements()) {
 			if(element instanceof IPackage) {
 				IDiagram[] diagrams = element.getDiagrams();
@@ -28,7 +28,7 @@ public class AstahModel {
 		}
 	}
 	
-	private static void getParametricDiagramsHelper(IPackage iPackage, List<IParametricDiagram> listOfDiagrams) {
+	private static void getParametricDiagramsHelper(IPackage iPackage, List<IDiagram> listOfDiagrams) {
 		for(INamedElement element : iPackage.getOwnedElements()) {
 			if(element instanceof IBlock) {
 				IDiagram[] diagrams = element.getDiagrams();
@@ -44,15 +44,15 @@ public class AstahModel {
 		}
 	}
 	
-	public static List<IBlockDefinitionDiagram> getBlockDefinitionDiagrams(IModel model) {
-		List<IBlockDefinitionDiagram> diagrams = new ArrayList<IBlockDefinitionDiagram>();
+	public static List<IDiagram> getBlockDefinitionDiagrams(IModel model) {
+		List<IDiagram> diagrams = new ArrayList<IDiagram>();
 		getBlockDefinitionDiagramsHelper(model, diagrams);
 		
 		return diagrams;
 	}
 	
-	public static List<IParametricDiagram> getParametricDiagrams(IModel model) {
-		List<IParametricDiagram> diagrams = new ArrayList<IParametricDiagram>();
+	public static List<IDiagram> getParametricDiagrams(IModel model) {
+		List<IDiagram> diagrams = new ArrayList<IDiagram>();
 		getParametricDiagramsHelper(model, diagrams);
 		
 		return diagrams;
