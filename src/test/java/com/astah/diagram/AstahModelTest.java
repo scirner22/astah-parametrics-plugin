@@ -11,11 +11,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.change_vision.jude.api.inf.AstahAPI;
+import com.change_vision.jude.api.inf.editor.ActivityDiagramEditor;
 import com.change_vision.jude.api.inf.editor.BlockDefinitionDiagramEditor;
+import com.change_vision.jude.api.inf.editor.DiagramEditor;
 import com.change_vision.jude.api.inf.editor.ModelEditorFactory;
 import com.change_vision.jude.api.inf.editor.ParametricDiagramEditor;
+import com.change_vision.jude.api.inf.editor.SequenceDiagramEditor;
 import com.change_vision.jude.api.inf.editor.SysmlModelEditor;
 import com.change_vision.jude.api.inf.editor.TransactionManager;
+import com.change_vision.jude.api.inf.editor.UseCaseDiagramEditor;
 import com.change_vision.jude.api.inf.model.IBlock;
 import com.change_vision.jude.api.inf.model.IDiagram;
 import com.change_vision.jude.api.inf.model.IModel;
@@ -37,6 +41,7 @@ public class AstahModelTest {
         TransactionManager.beginTransaction();
         SysmlModelEditor sme = ModelEditorFactory.getSysmlModelEditor();
         BlockDefinitionDiagramEditor bdde = prjAccessor.getDiagramEditorFactory().getBlockDefinitionDiagramEditor();
+        ActivityDiagramEditor ade = prjAccessor.getDiagramEditorFactory().getActivityDiagramEditor();
         ParametricDiagramEditor pde = prjAccessor.getDiagramEditorFactory().getParametricDiagramEditor();
         
         IPackage packageA = sme.createPackage(project, "PackageA");
@@ -46,6 +51,8 @@ public class AstahModelTest {
         IDiagram bdd1 = bdde.createBlockDefinitionDiagram(packageA, "BDD1");
         IDiagram bdd2 = bdde.createBlockDefinitionDiagram(packageB, "BDD2");
         IDiagram bdd3 = bdde.createBlockDefinitionDiagram(packageB, "BDD3");
+        IDiagram ad1 = ade.createActivityDiagram(packageA, "ACT1");
+        IDiagram ad2 = ade.createActivityDiagram(packageB, "ACT2");
         IParametricDiagram par1 = pde.createParametricDiagram(block1, "Par1");
         IParametricDiagram par2 = pde.createParametricDiagram(block2, "Par2");
         TransactionManager.endTransaction();
