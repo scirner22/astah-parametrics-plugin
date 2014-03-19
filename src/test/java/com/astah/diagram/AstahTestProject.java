@@ -16,8 +16,7 @@ import com.change_vision.jude.api.inf.model.IDiagram;
 import com.change_vision.jude.api.inf.model.IModel;
 import com.change_vision.jude.api.inf.model.INamedElement;
 import com.change_vision.jude.api.inf.model.IPackage;
-import com.change_vision.jude.api.inf.model.IParametricDiagram;
-import com.change_vision.jude.api.inf.presentation.INodePresentation;
+import com.change_vision.jude.api.inf.model.IValueType;
 import com.change_vision.jude.api.inf.project.ProjectAccessor;
 
 public class AstahTestProject {
@@ -52,6 +51,7 @@ public class AstahTestProject {
 	    project = prjAccessor.getProject();
 	    
         TransactionManager.beginTransaction();
+        
         SysmlModelEditor sme = ModelEditorFactory.getSysmlModelEditor();
         BlockDefinitionDiagramEditor bdde = prjAccessor.getDiagramEditorFactory().getBlockDefinitionDiagramEditor();
         ActivityDiagramEditor ade = prjAccessor.getDiagramEditorFactory().getActivityDiagramEditor();
@@ -60,22 +60,29 @@ public class AstahTestProject {
         IPackage packageA = sme.createPackage(project, "PackageA");
         IPackage packageB = sme.createPackage(project, "PackageB");
         IDiagram bdd1 = bdde.createBlockDefinitionDiagram(packageA, "BDD1");
-        IDiagram bdd2 = bdde.createBlockDefinitionDiagram(packageB, "BDD2");
-        IDiagram bdd3 = bdde.createBlockDefinitionDiagram(packageB, "BDD3");
-        IDiagram ad1 = ade.createActivityDiagram(packageA, "ACT1");
-        IDiagram ad2 = ade.createActivityDiagram(packageB, "ACT2");
+        bdde.createBlockDefinitionDiagram(packageB, "BDD2");
+        bdde.createBlockDefinitionDiagram(packageB, "BDD3");
+        ade.createActivityDiagram(packageA, "ACT1");
+        ade.createActivityDiagram(packageB, "ACT2");
         IBlock block1 = sme.createBlock(packageA, "AbstractBlock");
         block1.setAbstract(true);
         IBlock block2 = sme.createBlock(packageA, "Concrete1");
         IBlock block3 = sme.createBlock(packageA, "Concrete2");
         IBlock block4 = sme.createBlock(packageA, "Concrete3");
-        IParametricDiagram par1 = pde.createParametricDiagram(block2, "Par1");
-        IParametricDiagram par2 = pde.createParametricDiagram(block3, "Par2");
+        pde.createParametricDiagram(block2, "Par1");
+        pde.createParametricDiagram(block3, "Par2");
         bdde.setDiagram(bdd1);
-        INodePresentation blockPresentation1 = bdde.createNodePresentation(block1, new Point2D.Double(10.0, 10.0));
-        INodePresentation blockPresentation2 = bdde.createNodePresentation(block2, new Point2D.Double(10.0, 10.0));
-        INodePresentation blockPresentation3 = bdde.createNodePresentation(block3, new Point2D.Double(10.0, 10.0));
-        INodePresentation blockPresentation4 = bdde.createNodePresentation(block4, new Point2D.Double(10.0, 10.0));
+        bdde.createNodePresentation(block1, new Point2D.Double(10.0, 10.0));
+        bdde.createNodePresentation(block2, new Point2D.Double(10.0, 10.0));
+        bdde.createNodePresentation(block3, new Point2D.Double(10.0, 10.0));
+        bdde.createNodePresentation(block4, new Point2D.Double(10.0, 10.0));
+        IValueType integerValueType = sme.createValueType(packageA, "Integer");
+        IValueType realValueType = sme.createValueType(packageA, "Real");
+        IValueType booleanValueType = sme.createValueType(packageA, "Boolean");
+        sme.createValueAttribute(block2, "con1", integerValueType).setInitialValue("10");
+        sme.createValueAttribute(block2, "con2", realValueType).setInitialValue("15");
+        sme.createValueAttribute(block2, "con3", booleanValueType).setInitialValue("true");
+        sme.createValueAttribute(block3, "val1", integerValueType).setInitialValue("5");
         
         TransactionManager.endTransaction();
 	}

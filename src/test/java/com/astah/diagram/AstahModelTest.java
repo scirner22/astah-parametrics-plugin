@@ -26,14 +26,14 @@ public class AstahModelTest {
 	}
 	
 	@Test
-	public void fetchBlockDefinitionDiagrams() {
+	public void testBlockDefinitionDiagrams() {
 		List<IDiagram> elements = AstahModel.getBlockDefinitionDiagrams(project);
 		
 		assertEquals(Arrays.asList("BDD1", "BDD2", "BDD3"), AstahTestProject.convertToNames(elements));
 	}
 	
 	@Test
-	public void fetchParametricDiagrams() {
+	public void testParametricDiagrams() {
 		List<IDiagram> elements = AstahModel.getParametricDiagrams(project);
 		
 		assertEquals(Arrays.asList("Par1", "Par2"), AstahTestProject.convertToNames(elements));
