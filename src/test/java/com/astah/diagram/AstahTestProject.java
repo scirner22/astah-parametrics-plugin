@@ -67,7 +67,7 @@ public class AstahTestProject {
         IBlock block1 = sme.createBlock(packageA, "AbstractBlock");
         block1.setAbstract(true);
         IBlock block2 = sme.createBlock(packageA, "Concrete1");
-        IBlock block3 = sme.createBlock(packageA, "Concrete2");
+        IBlock block3 = sme.createBlock(packageB, "Concrete2");
         IBlock block4 = sme.createBlock(packageA, "Concrete3");
         pde.createParametricDiagram(block2, "Par1");
         pde.createParametricDiagram(block3, "Par2");
@@ -78,10 +78,10 @@ public class AstahTestProject {
         bdde.createNodePresentation(block4, new Point2D.Double(10.0, 10.0));
         IValueType integerValueType = sme.createValueType(packageA, "Integer");
         IValueType realValueType = sme.createValueType(packageA, "Real");
-        IValueType booleanValueType = sme.createValueType(packageA, "Boolean");
-        sme.createValueAttribute(block2, "con1", integerValueType).setInitialValue("10");
-        sme.createValueAttribute(block2, "con2", realValueType).setInitialValue("15");
-        sme.createValueAttribute(block2, "con3", booleanValueType).setInitialValue("true");
+        sme.createValueAttribute(block2, "con1{ex1}", integerValueType).setInitialValue("10");
+        sme.createValueAttribute(block2, "con1{ex2}", integerValueType).setInitialValue("10.9");
+        sme.createValueAttribute(block2, "con2", realValueType).setInitialValue("15.5");
+        sme.createValueAttribute(block2, "con3", realValueType).setInitialValue("11.2");
         sme.createValueAttribute(block3, "val1", integerValueType).setInitialValue("5");
         
         TransactionManager.endTransaction();

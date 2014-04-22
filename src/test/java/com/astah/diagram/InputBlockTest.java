@@ -2,20 +2,17 @@ package com.astah.diagram;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.change_vision.jude.api.inf.model.IBlock;
 import com.change_vision.jude.api.inf.model.IBlockDefinitionDiagram;
 import com.change_vision.jude.api.inf.model.IModel;
-import com.change_vision.jude.api.inf.model.IValueAttribute;
 
-public class VariableParametricInputTest {
+public class InputBlockTest {
 	private IModel project;
 	
 	@Before
@@ -29,30 +26,32 @@ public class VariableParametricInputTest {
 	}
 	
 	@Test
-	public void testVariableParametricBlocks() throws Exception {
+	public void testBlockName() throws Exception {
 		VariableParametricInput input = new VariableParametricInput((IBlockDefinitionDiagram) AstahModel.getBlockDefinitionDiagrams(project).get(0));
-		List<IBlock> blocks = input.getVariableInputBlocks();
+		InputBlock block = input.getInputBlock("Concrete1");
 		
-		assertEquals(Arrays.asList("Concrete1", "Concrete2", "Concrete3"), AstahTestProject.convertToNames(blocks));
+		assertEquals("Concrete1", block.getName());
 	}
 	
 	@Test
-	public void testInputBlockContents() throws Exception {
+	public void testBlockSize() throws Exception {
 		VariableParametricInput input = new VariableParametricInput((IBlockDefinitionDiagram) AstahModel.getBlockDefinitionDiagrams(project).get(0));
-		List<IValueAttribute> values = input.getValuesForBlock("Concrete1");
-		List<String> blockValues = new ArrayList<String>();
+		InputBlock block = input.getInputBlock("Concrete1");
 		
-		for(IValueAttribute value : values) {
-			blockValues.add(value.getName() + ":" + value.getTypeExpression() + "=" + value.getInitialValue());
-		}
-		
-		assertEquals(Arrays.asList("con1{ex1}:Integer=10", "con1{ex2}:Integer=10.9", "con2:Real=15.5", "con3:Real=11.2"), blockValues);
+		assertEquals(4, block.size());
 	}
 	
 	@Test
-	public void testGetInputBlocks() throws Exception {
+	public void testFlattenedMap() throws Exception {
 		VariableParametricInput input = new VariableParametricInput((IBlockDefinitionDiagram) AstahModel.getBlockDefinitionDiagrams(project).get(0));
+		InputBlock block = input.getInputBlock("Concrete1");
+		HashMap<String, String> values = block.asFlattenedMap();
 		
-		assertEquals(3, input.size());
+		HashMap<String, String> testMap = new HashMap<String, String>();
+		testMap.put("con1", "10, 10.9");
+		testMap.put("con2", "15.5");
+		testMap.put("con3", "11.2");
+		
+		assertEquals(testMap, values);
 	}
 }

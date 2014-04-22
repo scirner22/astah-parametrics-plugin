@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.change_vision.jude.api.inf.model.IBlock;
 import com.change_vision.jude.api.inf.model.IBlockDefinitionDiagram;
+import com.change_vision.jude.api.inf.model.IConstraintBlock;
 import com.change_vision.jude.api.inf.model.IDiagram;
 import com.change_vision.jude.api.inf.model.IModel;
 import com.change_vision.jude.api.inf.model.INamedElement;
@@ -30,7 +31,7 @@ public class AstahModel {
 	
 	private static void getParametricDiagramsHelper(IPackage iPackage, List<IDiagram> listOfDiagrams) {
 		for(INamedElement element : iPackage.getOwnedElements()) {
-			if(element instanceof IBlock) {
+			if(element instanceof IConstraintBlock || element instanceof IBlock) {
 				IDiagram[] diagrams = element.getDiagrams();
 				for(IDiagram diagram : diagrams) {
 					if(diagram instanceof IParametricDiagram) {
