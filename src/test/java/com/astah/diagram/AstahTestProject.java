@@ -45,6 +45,10 @@ public class AstahTestProject {
 		return project;
 	}
 	
+	public ProjectAccessor getProjectAccessor() {
+		return prjAccessor;
+	}
+	
 	private void createProject() throws Exception {
 		prjAccessor = AstahAPI.getAstahAPI().getProjectAccessor();
 		prjAccessor.create("test.asml");
