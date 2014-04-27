@@ -9,7 +9,6 @@ import org.junit.Test;
 import com.change_vision.jude.api.inf.editor.ModelEditorFactory;
 import com.change_vision.jude.api.inf.editor.SysmlModelEditor;
 import com.change_vision.jude.api.inf.editor.TransactionManager;
-import com.change_vision.jude.api.inf.model.IBlock;
 import com.change_vision.jude.api.inf.model.IDiagram;
 import com.change_vision.jude.api.inf.model.IPackage;
 import com.change_vision.jude.api.inf.presentation.IPresentation;

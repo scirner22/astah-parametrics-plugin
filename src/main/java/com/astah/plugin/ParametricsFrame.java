@@ -10,17 +10,25 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.astah.diagram.AstahModel;
+import com.change_vision.jude.api.inf.exception.InvalidUsingException;
+import com.change_vision.jude.api.inf.exception.ProjectNotFoundException;
+import com.change_vision.jude.api.inf.model.IDiagram;
 import com.change_vision.jude.api.inf.model.IModel;
+import com.change_vision.jude.api.inf.model.IParametricDiagram;
+import com.change_vision.jude.api.inf.project.ProjectAccessor;
 
 public class ParametricsFrame {
 	private JFrame frame;
+	private ProjectAccessor projectAccessor;
 	
-	public ParametricsFrame(IModel model) {
-		this.initGui(model);
+	public ParametricsFrame(ProjectAccessor projectAccessor) throws ProjectNotFoundException {
+		this.projectAccessor = projectAccessor;
+		this.initGui(this.projectAccessor.getProject());
 	}
 	
 	private void initGui(IModel model) {
@@ -32,8 +40,10 @@ public class ParametricsFrame {
 		descriptionPanel.add(new JLabel("Parametric Diagram:", JLabel.RIGHT));
 		
 		JPanel inputPanel = new JPanel(new GridLayout(0, 1, 5, 5));
-		inputPanel.add(new JComboBox(new DefaultComboBoxModel(AstahModel.getBlockDefinitionDiagrams(model).toArray())));
-		inputPanel.add(new JComboBox(new DefaultComboBoxModel(AstahModel.getParametricDiagrams(model).toArray())));
+		final JComboBox bddSelection = new JComboBox(new DefaultComboBoxModel(AstahModel.getBlockDefinitionDiagrams(model).toArray()));
+		final JComboBox parSelection = new JComboBox(new DefaultComboBoxModel(AstahModel.getParametricDiagrams(model).toArray()));
+		inputPanel.add(bddSelection);
+		inputPanel.add(parSelection);
 		
 		JButton cancelButton = new JButton("Cancel");
 		cancelButton.addActionListener(new ActionListener() {
@@ -45,7 +55,11 @@ public class ParametricsFrame {
 		JButton analysisButton = new JButton("Run Analysis");
 		analysisButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Button Pressed");
+				IDiagram bddDiagram = (IDiagram) bddSelection.getSelectedItem();
+				IParametricDiagram parDiagram = (IParametricDiagram) parSelection.getSelectedItem();
+				frame.dispose();
+				
+				runSolver(bddDiagram, parDiagram);
 			}
 		});
 		
@@ -61,5 +75,18 @@ public class ParametricsFrame {
 		frame.getRootPane().setBorder(new EmptyBorder(30, 20, 15, 20));
 		frame.pack();
 		frame.setVisible(true);
+	}
+	
+	private void runSolver(IDiagram bddDiagram, IParametricDiagram parDiagram) {
+		try {
+			ParametricsSolver solver = new ParametricsSolver(bddDiagram, parDiagram);
+			String diagramName = solver.solve(projectAccessor);
+			JOptionPane.showMessageDialog(null, "Output diagram " + diagramName + " created!");
+		}
+		catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Problem trying to write output diagram. ");
+			
+			e.printStackTrace();
+		}
 	}
 }

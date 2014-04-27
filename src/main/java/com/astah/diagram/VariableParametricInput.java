@@ -7,6 +7,7 @@ import java.util.List;
 import com.change_vision.jude.api.inf.exception.InvalidUsingException;
 import com.change_vision.jude.api.inf.model.IBlock;
 import com.change_vision.jude.api.inf.model.IBlockDefinitionDiagram;
+import com.change_vision.jude.api.inf.model.IPackage;
 import com.change_vision.jude.api.inf.model.IValueAttribute;
 import com.change_vision.jude.api.inf.presentation.IPresentation;
 
@@ -19,6 +20,10 @@ public class VariableParametricInput {
 		variableBlocks = new ArrayList<InputBlock>();
 		
 		this.parseValues();
+	}
+	
+	public IPackage getPackage() {
+		return (IPackage) diagram.getOwner();
 	}
 	
 	private String parseValueName(String name) {
