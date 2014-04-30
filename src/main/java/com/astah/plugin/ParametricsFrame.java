@@ -84,7 +84,7 @@ public class ParametricsFrame {
 			JOptionPane.showMessageDialog(null, "Output diagram " + diagramName + " created!");
 		}
 		catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Problem trying to write output diagram. ");
+			JOptionPane.showMessageDialog(null, "Problem trying to write output diagram.");
 			
 			e.printStackTrace();
 		}

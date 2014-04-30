@@ -9,6 +9,7 @@ import com.astah.diagram.InputBlock;
 import com.astah.diagram.OutputBlock;
 import com.astah.diagram.VariableParametricInput;
 import com.astah.diagram.VariableParametricOutput;
+import com.astah.wolfram.WolframAlphaProxy;
 import com.change_vision.jude.api.inf.editor.TransactionManager;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.change_vision.jude.api.inf.exception.InvalidUsingException;
@@ -27,10 +28,12 @@ public class ParametricsSolver {
 	private VariableParametricInput inputDiagram;
 	private IParametricDiagram par;
 	private String outputBddName;
+	private WolframAlphaProxy waProxy;
 	
 	public ParametricsSolver(IDiagram bdd, IParametricDiagram par) throws InvalidUsingException {
 		inputDiagram = new VariableParametricInput((IBlockDefinitionDiagram) bdd);
 		this.par = par;
+		waProxy = new WolframAlphaProxy();
 		
 		if(bdd.getName().contains("Input")) {
 			outputBddName = bdd.getName().replace("Input", "Output");
@@ -43,10 +46,23 @@ public class ParametricsSolver {
 	private void insertValue(List<String> equations, String lookupSubstring, String value) {
 		for(int i = 0; i < equations.size(); i ++) {
 			if(equations.get(i).contains(lookupSubstring)) {
-				String equation = equations.get(i).replace(lookupSubstring, value);
-				equations.set(i, equation);
+				String temp = equations.get(i).replace(lookupSubstring, value);
+				equations.set(i, temp);
 			}
 		}
+	}
+	
+	private HashMap<String, String> formatEquations(List<String> equations) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		for(String equation : equations) {
+			String key = equation.replaceFirst("=.+", "").trim();
+			String value = equation.replaceFirst(".+=", "").trim();
+			
+			map.put(key, value);
+		}
+		
+		return map;
 	}
 	
 	public String solve(ProjectAccessor projectAccessor) throws InvalidUsingException, ClassNotFoundException, InvalidEditingException {
@@ -57,12 +73,22 @@ public class ParametricsSolver {
 			HashMap<String, String> input = inputBlock.asFlattenedMap();
 			OutputBlock outputBlock = new OutputBlock(inputBlock.getName() + "_Results");
 			
-			for(Map.Entry<String, IConstraintParameter> entry : getPorts().entrySet()) {
+			HashMap<String, IConstraintParameter> portMap = getPorts();
+			
+			for(Map.Entry<String, IConstraintParameter> entry : portMap.entrySet()) {
 				String key = entry.getKey();
 				
 				if(input.containsKey(key)) {
 					insertValue(equations, entry.getValue().getName(), input.get(key));
-					outputBlock.addValueAttribute(key, (IValueType) entry.getValue().getType(), "10");
+				}
+			}
+			
+			for(Map.Entry<String, String> entry : formatEquations(equations).entrySet()) {
+				String key = entry.getKey();
+				
+				if(portMap.containsKey(key)) {
+					String value = waProxy.query(entry.getValue());
+					outputBlock.addValueAttribute(key, (IValueType) portMap.get(key).getType(), value);
 				}
 			}
 			
